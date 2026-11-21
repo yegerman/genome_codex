@@ -5,7 +5,7 @@ them: it gets sequence out of real files, interprets it with the standard
 genetic code, explains in plain words what a stretch does, checks its syntax,
 and writes it back in a format other tools accept.
 
-Install comes with `./setup.sh`. Tests: `make test` (172 checks, no network).
+Install comes with `./setup.sh`. Tests: `make test` (176 checks, no network).
 
 Runnable straight away, against data already in the repository:
 
@@ -84,7 +84,7 @@ published as β6 Glu→Val. Every comparison prints this note.
 
 Formats read: FASTA (`.fa .fasta .fna .ffn .frn`), the ORIGIN block of GenBank
 flat files (`.gb .gbk .genbank`), the UCI promoter CSV (`.csv .data`), and
-plain sequence text (`.txt .seq`).
+plain sequence text (`.txt .seq`). Any of them may be gzipped (`.fasta.gz`).
 
 ## Writing
 

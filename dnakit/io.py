@@ -10,10 +10,23 @@ tools can read. It is not sequence design for synthesis.
 A record is a small, immutable object: identifier, description, sequence.
 """
 import csv
+import gzip
 from dataclasses import dataclass, replace
 from pathlib import Path
 
 from .sequence import clean, describe, reverse_complement, validate
+
+
+def _open_text(path):
+    """Open a text file, transparently decompressing a .gz one.
+
+    Public sequence data almost always ships gzipped, so every reader goes
+    through here.
+    """
+    path = Path(path)
+    if path.suffix.lower() == ".gz":
+        return gzip.open(path, "rt")
+    return path.open()
 
 
 @dataclass(frozen=True)
@@ -61,7 +74,7 @@ def read_fasta(path):
         records.append(Record(id=ident, sequence=sequence,
                               description=description.strip(), source=str(path)))
 
-    with path.open() as handle:
+    with _open_text(path) as handle:
         for line in handle:
             line = line.rstrip("\n")
             if line.startswith(">"):
@@ -90,7 +103,7 @@ def read_genbank(path):
     definition_parts, sequence_parts = [], []
     in_origin = in_definition = False
 
-    with path.open() as handle:
+    with _open_text(path) as handle:
         for line in handle:
             stripped = line.strip()
             if in_origin:
@@ -133,7 +146,7 @@ def read_uci_promoters(path):
     """
     path = Path(path)
     records = []
-    with path.open() as handle:
+    with _open_text(path) as handle:
         for line_number, row in enumerate(csv.reader(handle), start=1):
             if not row:
                 continue
@@ -151,7 +164,8 @@ def read_uci_promoters(path):
 def read_plain(path):
     """Read a file holding nothing but sequence text."""
     path = Path(path)
-    sequence = clean(path.read_text())
+    with _open_text(path) as handle:
+        sequence = clean(handle.read())
     if not sequence:
         raise ValueError(f"{path}: file holds no sequence characters")
     return [Record(id=path.stem, sequence=sequence, source=str(path))]
@@ -168,7 +182,11 @@ READERS = {
 
 def read(path):
     """Read any supported file, choosing the parser by extension."""
-    suffix = Path(path).suffix.lower()
+    suffixes = [s.lower() for s in Path(path).suffixes]
+    # A trailing .gz is compression, not a format: dispatch on what is inside.
+    if suffixes and suffixes[-1] == ".gz":
+        suffixes = suffixes[:-1]
+    suffix = suffixes[-1] if suffixes else ""
     try:
         reader = READERS[suffix]
     except KeyError:

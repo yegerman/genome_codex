@@ -86,12 +86,28 @@ changes, and reports motif matches with Poisson odds of coincidence. It
 reports what a sequence says under the genetic code, never what it does in a
 cell.
 
+**A quantitative sequence-to-activity dataset exists and joins.**
+`experiments/006` downloaded the two ENCODE K562 MPRA experiments behind GEO
+GSE266775 and GSE266796, with md5 checks, and joined sequence to measured
+activity from the bytes.
+
+| | ENCSR820RPI | ENCSR997GVD |
+|---|---|---|
+| rows joined to a sequence | 15,000 of 15,000 | 60,745 of 60,747 |
+| with a measured log2 fold change | 14,985 | 60,240 |
+| reference/alternate pairs measured | none | 29,765 (26,875 differ by one letter) |
+| independent units | 1,000 source regions | 27,541 variant ids |
+
+Positive controls sit well above negative controls in both (median log2 fold
+change +3.93 against +0.10, and +2.32 against +0.23), so the activity column
+measures activity. This closes the question `HANDOFF.md` left open. It is
+reporter activity on a plasmid in one cell line, not native gene expression.
+
 ## Not verified
 
-**No quantitative sequence-to-activity dataset has been obtained.** The MPRA
-accessions named in `HANDOFF.md` have never been downloaded or inspected in
-any session. Whether they contain a usable joined sequence-and-activity table
-is unknown.
+**No model has been fitted to quantitative activity data.** The data are now
+in hand (see above) but nothing has been trained or evaluated on them. Any
+statement about how well sequence predicts activity would be invention.
 
 **The environment setup script has run on one local machine only.** On
 2026-11-21, `./setup.sh` built `.venv` from empty on an Apple M5 Pro (macOS,

@@ -47,8 +47,10 @@ Environment name: `genome_code` (personal).
 
 ## Not yet covered
 
-- Hosts for MPRA data outside NCBI, and `download.pytorch.org`, are not on
-  the cloud allowlist. Add them when an experiment needs them.
+- `experiments/006` downloads MPRA data from `www.encodeproject.org`, which
+  redirects to `encode-public.s3.amazonaws.com`. Neither is on the cloud
+  allowlist, so that experiment runs locally only until they are added.
+  `download.pytorch.org` is not on it either.
 - The pretrained-model experiment in `experiments/004` has run locally only
   (Apple M5 Pro, about 1.5 minutes on CPU). Its first run downloads about
   224 MB of model weights from `huggingface.co` into `~/.cache/huggingface`.

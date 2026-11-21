@@ -183,6 +183,33 @@ def test_fasta_roundtrip():
             check("empty FASTA refused", True)
 
 
+def test_gzip_reading():
+    import gzip
+
+    with tempfile.TemporaryDirectory() as tmp:
+        records = [Record(id="HBB_fragment", sequence=HBB_CDS_START,
+                          description="gzipped")]
+        path = Path(tmp) / "seq.fasta.gz"
+        with gzip.open(path, "wt") as handle:
+            handle.write(dnaio.format_fasta(records))
+
+        equal("read_fasta reads a gzipped file",
+              dnaio.read_fasta(path)[0].sequence, HBB_CDS_START)
+        back = dnaio.read(path)
+        equal("read() looks past .gz to the real format",
+              back[0].sequence, HBB_CDS_START)
+        equal("description survives gzip", back[0].description, "gzipped")
+
+        unknown = Path(tmp) / "seq.xyz.gz"
+        with gzip.open(unknown, "wt") as handle:
+            handle.write("ATGC")
+        try:
+            dnaio.read(unknown)
+            check("unknown format inside .gz rejected", False, "no error raised")
+        except ValueError:
+            check("unknown format inside .gz rejected", True)
+
+
 def test_fasta_errors():
     with tempfile.TemporaryDirectory() as tmp:
         bad = Path(tmp) / "headerless.fasta"

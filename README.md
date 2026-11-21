@@ -4,7 +4,7 @@
 
 Open `HANDOFF.md` for context and the scientific handoff. This folder is ready for a shared Git repository used by Claude Code and Codex.
 
-**Reading and writing DNA:** `dnakit/` is the sequence layer — parse FASTA, GenBank and the UCI CSV, transcribe, translate, find reading frames, handle both strands, and write FASTA back out. `dnakit read|translate|orfs|revcomp|write|promoter`, or `import dnakit`. See `dnakit/README.md`; `make test` runs its 94 checks.
+**Reading and writing DNA:** `dnakit/` is the sequence layer — parse FASTA, GenBank and the UCI CSV, transcribe, translate, find reading frames, handle both strands, and write FASTA back out. `dnakit read|translate|orfs|revcomp|write|promoter`, or `import dnakit`. See `dnakit/README.md`; `make test` runs its 176 checks.
 
 To start:
 1. Extract ZIP to an empty folder and initialize a Git repo if needed.

@@ -1,0 +1,439 @@
+{
+  "ENCSR820RPI": {
+    "table_file": "ENCFF157VVX.tsv",
+    "fasta_file": "ENCFF798CYL.fasta.gz",
+    "table_columns": [
+      "ID",
+      "SNP",
+      "chr",
+      "start",
+      "stop",
+      "pos",
+      "ref_allele",
+      "alt_allele",
+      "allele",
+      "window",
+      "strand",
+      "project",
+      "haplotype",
+      "ctrl_exp",
+      "DNA_mean",
+      "ctrl_mean",
+      "exp_mean",
+      "log2FoldChange",
+      "lfcSE",
+      "stat",
+      "pvalue",
+      "padj"
+    ],
+    "table_rows": 15000,
+    "table_unique_ids": 15000,
+    "fasta_records": 15000,
+    "fasta_combined_headers": 0,
+    "fasta_ids_after_expanding": 15000,
+    "ids_in_both_before_expanding": 15000,
+    "ids_in_both": 15000,
+    "table_ids_without_sequence": 0,
+    "sequences_without_table_row": 0,
+    "examples_table_only": [],
+    "examples_fasta_only": [],
+    "sequence_lengths": {
+      "196": 1,
+      "199": 2,
+      "200": 14997
+    },
+    "sequences_with_non_acgt": 0,
+    "duplicate_sequences": 0,
+    "joined_rows": 15000,
+    "joined_rows_with_activity": 14985,
+    "log2FoldChange": {
+      "n": 14985,
+      "min": -4.03671361131723,
+      "q1": 0.18126866094239202,
+      "median": 0.861500635027938,
+      "q3": 2.29504841981003,
+      "max": 7.07336217986133,
+      "mean": 1.400589736833431,
+      "sd": 1.5802056361912482
+    },
+    "lfcSE": {
+      "n": 14985,
+      "min": 0.0756670745224482,
+      "q1": 0.10331399845045,
+      "median": 0.125785703980184,
+      "q3": 0.161171829440404,
+      "max": 3.34939273312853,
+      "mean": 0.15742888558592738,
+      "sd": 0.17041855027713926
+    },
+    "DNA_mean_plasmid_count": {
+      "n": 14985,
+      "min": 0.25,
+      "q1": 2344.375,
+      "median": 4833.75,
+      "q3": 7403.5,
+      "max": 18305.25,
+      "mean": 5081.182098765432,
+      "sd": 3351.9475138076104
+    },
+    "project_values": {
+      "GATA": 13058,
+      "MPRA:ORF_negCtrl": 1095,
+      "MPRA:ctrl_neg": 506,
+      "MPRA:nadav_negCtrl-shuf": 250,
+      "MPRA:ctrl_pos": 91
+    },
+    "chromosomes": 24,
+    "activity_by_project": {
+      "GATA": {
+        "n": 13046,
+        "median_log2FoldChange": 1.07718876731283,
+        "fraction_above_1": 0.5198528284531657
+      },
+      "MPRA:ORF_negCtrl": {
+        "n": 1093,
+        "median_log2FoldChange": 0.10042600138626,
+        "fraction_above_1": 0.0878316559926807
+      },
+      "MPRA:ctrl_neg": {
+        "n": 506,
+        "median_log2FoldChange": 0.101795970507502,
+        "fraction_above_1": 0.025691699604743084
+      },
+      "MPRA:nadav_negCtrl-shuf": {
+        "n": 249,
+        "median_log2FoldChange": 0.0591956196201012,
+        "fraction_above_1": 0.08032128514056225
+      },
+      "MPRA:ctrl_pos": {
+        "n": 91,
+        "median_log2FoldChange": 3.93448196713011,
+        "fraction_above_1": 0.9230769230769231
+      }
+    },
+    "mutagenesis_source_regions": {
+      "entries_derived_from_a_region": 13058,
+      "distinct_source_regions": 1000,
+      "entries_per_region_min": 10,
+      "entries_per_region_median": 10,
+      "entries_per_region_max": 40
+    },
+    "distinct_variant_ids": 598,
+    "variants_tested_in_several_configurations": 0,
+    "window_values": {
+      "NA": 15000
+    },
+    "strand_values": {
+      ".": 15000
+    },
+    "reference_alternate_pairs_with_activity": 0,
+    "pair_sequence_differences": {}
+  },
+  "ENCSR997GVD": {
+    "table_file": "ENCFF612YRJ.tsv",
+    "fasta_file": "ENCFF621JOY.fasta.gz",
+    "table_columns": [
+      "ID",
+      "SNP",
+      "chr",
+      "pos",
+      "ref_allele",
+      "alt_allele",
+      "allele",
+      "window",
+      "strand",
+      "project",
+      "haplotype",
+      "ctrl_exp",
+      "DNA_mean",
+      "ctrl_mean",
+      "exp_mean",
+      "log2FoldChange",
+      "lfcSE",
+      "stat",
+      "pvalue",
+      "padj"
+    ],
+    "table_rows": 60747,
+    "table_unique_ids": 60747,
+    "fasta_records": 59474,
+    "fasta_combined_headers": 1099,
+    "fasta_ids_after_expanding": 60745,
+    "ids_in_both_before_expanding": 58375,
+    "ids_in_both": 60745,
+    "table_ids_without_sequence": 2,
+    "sequences_without_table_row": 0,
+    "examples_table_only": [
+      "15:73983319:T:INS_ME_ALU>:A:wC",
+      "15:73983319:T:INS_ME_ALU>:R:wC"
+    ],
+    "examples_fasta_only": [],
+    "sequence_lengths": {
+      "130": 1,
+      "148": 1,
+      "164": 1,
+      "165": 1,
+      "168": 2,
+      "170": 3,
+      "171": 2,
+      "172": 2,
+      "176": 4,
+      "177": 2,
+      "178": 8,
+      "179": 3,
+      "180": 7,
+      "181": 11,
+      "182": 17,
+      "183": 29,
+      "184": 6,
+      "185": 6,
+      "186": 13,
+      "187": 29,
+      "188": 13,
+      "189": 24,
+      "190": 27,
+      "191": 26,
+      "192": 46,
+      "193": 33,
+      "194": 70,
+      "195": 92,
+      "196": 262,
+      "197": 254,
+      "198": 528,
+      "199": 1630,
+      "200": 56321
+    },
+    "sequences_with_non_acgt": 0,
+    "duplicate_sequences": 0,
+    "joined_rows": 60745,
+    "joined_rows_with_activity": 60240,
+    "log2FoldChange": {
+      "n": 60240,
+      "min": -4.87736702896113,
+      "q1": -0.14441064376605176,
+      "median": 0.194606221543137,
+      "q3": 0.8116693173205487,
+      "max": 10.4615206376062,
+      "mean": 0.537937661940365,
+      "sd": 1.195561095483586
+    },
+    "lfcSE": {
+      "n": 60240,
+      "min": 0.066892292578332,
+      "q1": 0.0960327964685772,
+      "median": 0.121208520324613,
+      "q3": 0.17131172809669376,
+      "max": 3.16071542191648,
+      "mean": 0.19281165695441008,
+      "sd": 0.3151450802036496
+    },
+    "DNA_mean_plasmid_count": {
+      "n": 60240,
+      "min": 0.0,
+      "q1": 257.0,
+      "median": 508.8,
+      "q3": 858.2,
+      "max": 10057.0,
+      "mean": 619.377503320053,
+      "sd": 499.32726772864333
+    },
+    "project_values": {
+      "ALP": 12590,
+      "GGT": 11640,
+      "AST": 9764,
+      "SBP": 7208,
+      "DBP": 6358,
+      "TBil": 6229,
+      "SBP,DBP": 959,
+      "DBP,SBP": 913,
+      "ctrl_neg": 505,
+      "GGT,ALP": 367,
+      "ALP,GGT": 347,
+      "ctrl_emvar": 269
+    },
+    "chromosomes": 23,
+    "activity_by_project": {
+      "ALP": {
+        "n": 12475,
+        "median_log2FoldChange": 0.177803923977529,
+        "fraction_above_1": 0.2014428857715431
+      },
+      "GGT": {
+        "n": 11516,
+        "median_log2FoldChange": 0.1987500631262205,
+        "fraction_above_1": 0.2147447030218826
+      },
+      "AST": {
+        "n": 9686,
+        "median_log2FoldChange": 0.1948944359716015,
+        "fraction_above_1": 0.21618831302911418
+      },
+      "SBP": {
+        "n": 7140,
+        "median_log2FoldChange": 0.2048026211978835,
+        "fraction_above_1": 0.2088235294117647
+      },
+      "DBP": {
+        "n": 6323,
+        "median_log2FoldChange": 0.177633525649294,
+        "fraction_above_1": 0.20512414992883124
+      },
+      "TBil": {
+        "n": 6188,
+        "median_log2FoldChange": 0.185104120611859,
+        "fraction_above_1": 0.21331609566903684
+      },
+      "SBP,DBP": {
+        "n": 950,
+        "median_log2FoldChange": 0.225990310461844,
+        "fraction_above_1": 0.22736842105263158
+      },
+      "DBP,SBP": {
+        "n": 906,
+        "median_log2FoldChange": 0.2271291293411645,
+        "fraction_above_1": 0.2240618101545254
+      },
+      "ctrl_neg": {
+        "n": 505,
+        "median_log2FoldChange": 0.229241426353244,
+        "fraction_above_1": 0.06336633663366337
+      },
+      "GGT,ALP": {
+        "n": 363,
+        "median_log2FoldChange": 0.260385710770289,
+        "fraction_above_1": 0.256198347107438
+      },
+      "ALP,GGT": {
+        "n": 343,
+        "median_log2FoldChange": 0.23401194141816,
+        "fraction_above_1": 0.2099125364431487
+      },
+      "ctrl_emvar": {
+        "n": 269,
+        "median_log2FoldChange": 2.32002524922617,
+        "fraction_above_1": 0.6840148698884758
+      },
+      "AST,GGT": {
+        "n": 234,
+        "median_log2FoldChange": 0.215519882475243,
+        "fraction_above_1": 0.23076923076923078
+      },
+      "AST,ALP": {
+        "n": 222,
+        "median_log2FoldChange": 0.140104733092453,
+        "fraction_above_1": 0.18468468468468469
+      },
+      "GGT,AST": {
+        "n": 214,
+        "median_log2FoldChange": 0.29610580890708904,
+        "fraction_above_1": 0.2850467289719626
+      },
+      "ALP,AST": {
+        "n": 208,
+        "median_log2FoldChange": 0.08709742175027775,
+        "fraction_above_1": 0.1875
+      },
+      "TBil,GGT": {
+        "n": 175,
+        "median_log2FoldChange": 0.11266145653325,
+        "fraction_above_1": 0.1657142857142857
+      },
+      "TBil,ALP": {
+        "n": 169,
+        "median_log2FoldChange": 0.170399385751594,
+        "fraction_above_1": 0.21301775147928995
+      },
+      "GGT,TBil": {
+        "n": 159,
+        "median_log2FoldChange": 0.16602626769987,
+        "fraction_above_1": 0.20125786163522014
+      },
+      "ALP,TBil": {
+        "n": 147,
+        "median_log2FoldChange": 0.132291767595388,
+        "fraction_above_1": 0.17006802721088435
+      },
+      "SBP,TBil": {
+        "n": 135,
+        "median_log2FoldChange": 0.149825812292179,
+        "fraction_above_1": 0.14074074074074075
+      },
+      "TBil,SBP": {
+        "n": 124,
+        "median_log2FoldChange": 0.266400933285256,
+        "fraction_above_1": 0.12903225806451613
+      },
+      "AST,TBil": {
+        "n": 111,
+        "median_log2FoldChange": 0.486619845904627,
+        "fraction_above_1": 0.35135135135135137
+      },
+      "TBil,AST": {
+        "n": 105,
+        "median_log2FoldChange": 0.43912091388033,
+        "fraction_above_1": 0.2761904761904762
+      },
+      "SBP,AST": {
+        "n": 98,
+        "median_log2FoldChange": 0.15103033007538752,
+        "fraction_above_1": 0.19387755102040816
+      },
+      "GGT,SBP": {
+        "n": 98,
+        "median_log2FoldChange": 0.2383048928315755,
+        "fraction_above_1": 0.16326530612244897
+      },
+      "SBP,GGT": {
+        "n": 86,
+        "median_log2FoldChange": 0.1480778897799325,
+        "fraction_above_1": 0.08139534883720931
+      },
+      "AST,SBP": {
+        "n": 72,
+        "median_log2FoldChange": 0.18148184352680552,
+        "fraction_above_1": 0.25
+      },
+      "ctrl_pos": {
+        "n": 71,
+        "median_log2FoldChange": 5.17214582642361,
+        "fraction_above_1": 0.8450704225352113
+      },
+      "DBP,GGT": {
+        "n": 70,
+        "median_log2FoldChange": 0.09602024937801475,
+        "fraction_above_1": 0.15714285714285714
+      },
+      "ALP,DBP": {
+        "n": 61,
+        "median_log2FoldChange": 0.324802685368596,
+        "fraction_above_1": 0.26229508196721313
+      },
+      "GGT,DBP": {
+        "n": 58,
+        "median_log2FoldChange": 0.02848592156680975,
+        "fraction_above_1": 0.15517241379310345
+      },
+      "GGT,ALP,AST": {
+        "n": 54,
+        "median_log2FoldChange": 0.3584000230858405,
+        "fraction_above_1": 0.3333333333333333
+      }
+    },
+    "distinct_variant_ids": 27541,
+    "variants_tested_in_several_configurations": 641,
+    "window_values": {
+      "center": 56183,
+      "left": 2092,
+      "right": 2092,
+      "NA": 378
+    },
+    "strand_values": {
+      "fwd": 60745
+    },
+    "reference_alternate_pairs_with_activity": 29765,
+    "pair_sequence_differences": {
+      "1 letter(s) differ": 26875,
+      "different length": 2890
+    }
+  }
+}
