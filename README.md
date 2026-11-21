@@ -1,5 +1,7 @@
 # Genetic Language Research — transfer kit
 
+**Quick start:** `./setup.sh` sets up a local environment and verifies the stored results. See `ENVIRONMENT.md` for local, dev-container and cloud setup, and `STATUS.md` for what is verified.
+
 Open `HANDOFF.md` for context and the scientific handoff. This folder is ready for a shared Git repository used by Claude Code and Codex.
 
 To start:
