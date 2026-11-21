@@ -1,0 +1,301 @@
+{
+  "question": "Does a frozen pretrained genomic LM beat k-mer counts on MPRA activity?",
+  "model": {
+    "id": "InstaDeepAI/nucleotide-transformer-v2-50m-multi-species",
+    "revision": "81b29e5786726d891dbf929404ef20adca5b36f1",
+    "frozen": true,
+    "pooling": "mean over real tokens",
+    "layers_offered": [
+      0,
+      3,
+      6,
+      9,
+      12
+    ],
+    "license": "cc-by-nc-sa-4.0 (research use only)",
+    "cached": false,
+    "device": "mps",
+    "tokens_per_sequence": 36,
+    "seconds": 150.3
+  },
+  "unit_flow": {
+    "table_rows": 60747,
+    "joined_with_measured_activity_and_se": 60240,
+    "after_removing_controls": 59376,
+    "after_requiring_200_bases": 56205,
+    "unique_sequences": 55008
+  },
+  "leakage_audit": {
+    "identical_sequences_across_split": 0,
+    "kmer_length": 30,
+    "strands_checked": "both",
+    "holdout_sequences": 4335,
+    "holdout_sharing_a_kmer_with_development": 879,
+    "holdout_sharing_fraction": 0.2027681660899654,
+    "holdout_clean": 3456
+  },
+  "models": {
+    "nt_ridge": {
+      "cross_validation": {
+        "per_fold": [
+          {
+            "n": 10128,
+            "r2": 0.17954485233412298,
+            "mae": 0.7595877675207634,
+            "pearson": 0.42383807256913375,
+            "spearman": 0.3702841413339549
+          },
+          {
+            "n": 10001,
+            "r2": 0.1396030712336912,
+            "mae": 0.7144254943931017,
+            "pearson": 0.3780890806742466,
+            "spearman": 0.3471347934552676
+          },
+          {
+            "n": 9940,
+            "r2": 0.1660360567694329,
+            "mae": 0.691519130221875,
+            "pearson": 0.40949147078958015,
+            "spearman": 0.3577073358305379
+          },
+          {
+            "n": 9944,
+            "r2": 0.15310370034391652,
+            "mae": 0.7277707585311557,
+            "pearson": 0.3921711417275814,
+            "spearman": 0.3534945829092114
+          },
+          {
+            "n": 10660,
+            "r2": 0.17929136604190143,
+            "mae": 0.7639343276167894,
+            "pearson": 0.42351512951159115,
+            "spearman": 0.3760986951732087
+          }
+        ],
+        "pearson_mean": 0.40542097905442664,
+        "pearson_sd": 0.020035888896641665,
+        "spearman_mean": 0.3609439097404361,
+        "spearman_sd": 0.011974629652142561,
+        "r2_mean": 0.16351580934461302,
+        "r2_sd": 0.017265435942622104,
+        "mae_mean": 0.731447495656737,
+        "mae_sd": 0.030597428162313388
+      },
+      "holdout": {
+        "n": 4335,
+        "r2": 0.1423345919976956,
+        "mae": 0.7072900884854278,
+        "pearson": 0.38281647055875245,
+        "spearman": 0.37934892952518584
+      },
+      "holdout_no_shared_kmer": {
+        "n": 3456,
+        "r2": 0.13943239402683416,
+        "mae": 0.7193784056804275,
+        "pearson": 0.3787126046510468,
+        "spearman": 0.37131980564337314
+      },
+      "holdout_pearson_ci95": {
+        "low": 0.3381818337178527,
+        "high": 0.42924368332213386,
+        "resamples": 1000,
+        "unit": "variant",
+        "n_variants": 2155
+      },
+      "layer": 6,
+      "alpha": 1000.0,
+      "by_layer": {
+        "0": {
+          "alpha": 10000.0,
+          "mean_cv_r2": 0.051315612099551246,
+          "mean_cv_pearson": 0.23029482240901342
+        },
+        "3": {
+          "alpha": 10000.0,
+          "mean_cv_r2": 0.14614904746489324,
+          "mean_cv_pearson": 0.3827280767736937
+        },
+        "6": {
+          "alpha": 1000.0,
+          "mean_cv_r2": 0.16351580934461302,
+          "mean_cv_pearson": 0.40542097905442664
+        },
+        "9": {
+          "alpha": 10000.0,
+          "mean_cv_r2": 0.15131964089905,
+          "mean_cv_pearson": 0.3895209544340144
+        },
+        "12": {
+          "alpha": 1000.0,
+          "mean_cv_r2": 0.13514552231458585,
+          "mean_cv_pearson": 0.36959178824995964
+        }
+      }
+    },
+    "kmer_ridge": {
+      "cross_validation": {
+        "per_fold": [
+          {
+            "n": 10128,
+            "r2": 0.24547843513013134,
+            "mae": 0.7184445941499729,
+            "pearson": 0.5017774519982586,
+            "spearman": 0.45734289873290584
+          },
+          {
+            "n": 10001,
+            "r2": 0.22354639452499003,
+            "mae": 0.667207070118841,
+            "pearson": 0.4749242543290474,
+            "spearman": 0.4436031272097746
+          },
+          {
+            "n": 9940,
+            "r2": 0.24735261181274604,
+            "mae": 0.6554870558530635,
+            "pearson": 0.49864811689872535,
+            "spearman": 0.44271849716566847
+          },
+          {
+            "n": 9944,
+            "r2": 0.22310822842048506,
+            "mae": 0.6878325093973965,
+            "pearson": 0.4750681671553739,
+            "spearman": 0.46193958883903113
+          },
+          {
+            "n": 10660,
+            "r2": 0.27378686071336267,
+            "mae": 0.7106106155943653,
+            "pearson": 0.5341226127974789,
+            "spearman": 0.47142587192754876
+          }
+        ],
+        "pearson_mean": 0.49690812063577683,
+        "pearson_sd": 0.024351233785911253,
+        "spearman_mean": 0.4554059967749858,
+        "spearman_sd": 0.012281654923782376,
+        "r2_mean": 0.24265450612034303,
+        "r2_sd": 0.020895257687542725,
+        "mae_mean": 0.6879163690227278,
+        "mae_sd": 0.027053390744311
+      },
+      "holdout": {
+        "n": 4335,
+        "r2": 0.22465997144519412,
+        "mae": 0.6719982701570948,
+        "pearson": 0.47541200548692336,
+        "spearman": 0.466036311970738
+      },
+      "holdout_no_shared_kmer": {
+        "n": 3456,
+        "r2": 0.22046271106231718,
+        "mae": 0.6806785192672417,
+        "pearson": 0.47161706224769534,
+        "spearman": 0.46254487326928806
+      },
+      "holdout_pearson_ci95": {
+        "low": 0.4319076771888571,
+        "high": 0.5191219255251214,
+        "resamples": 1000,
+        "unit": "variant",
+        "n_variants": 2155
+      },
+      "alpha": 100000.0
+    },
+    "kmer_plus_nt": {
+      "cross_validation": {
+        "per_fold": [
+          {
+            "n": 10128,
+            "r2": 0.2515874555981421,
+            "mae": 0.7149095358354913,
+            "pearson": 0.5073055799185792,
+            "spearman": 0.46819878527643605
+          },
+          {
+            "n": 10001,
+            "r2": 0.231942681731108,
+            "mae": 0.6639104363832381,
+            "pearson": 0.4835722665058344,
+            "spearman": 0.4553728770734204
+          },
+          {
+            "n": 9940,
+            "r2": 0.2544893657676379,
+            "mae": 0.6506254608430269,
+            "pearson": 0.5058209860677855,
+            "spearman": 0.45452088646637673
+          },
+          {
+            "n": 9944,
+            "r2": 0.23160849738472522,
+            "mae": 0.6837495270622588,
+            "pearson": 0.484208236137276,
+            "spearman": 0.47311127398245434
+          },
+          {
+            "n": 10660,
+            "r2": 0.27747791357566043,
+            "mae": 0.7074574839051103,
+            "pearson": 0.537580282114096,
+            "spearman": 0.48053979266955865
+          }
+        ],
+        "pearson_mean": 0.5036974701487142,
+        "pearson_sd": 0.022081818237360735,
+        "spearman_mean": 0.4663487230936492,
+        "spearman_sd": 0.011301639211342097,
+        "r2_mean": 0.24942118281145476,
+        "r2_sd": 0.018975965848713198,
+        "mae_mean": 0.684130488805825,
+        "mae_sd": 0.027491275829918307
+      },
+      "holdout": {
+        "n": 4335,
+        "r2": 0.23253901998847637,
+        "mae": 0.6666499050130836,
+        "pearson": 0.4836907664602088,
+        "spearman": 0.480162472543405
+      },
+      "holdout_no_shared_kmer": {
+        "n": 3456,
+        "r2": 0.2293229045794456,
+        "mae": 0.6755662148959929,
+        "pearson": 0.4811259195877428,
+        "spearman": 0.4776830796916091
+      },
+      "holdout_pearson_ci95": {
+        "low": 0.44193004007942255,
+        "high": 0.5254160494404869,
+        "resamples": 1000,
+        "unit": "variant",
+        "n_variants": 2155
+      },
+      "alpha": 100000.0,
+      "nt_layer": 6
+    }
+  },
+  "comparisons": {
+    "nt_ridge_minus_kmer_ridge": {
+      "difference_in_pearson": -0.09259553492817091,
+      "ci95_low": -0.12158295203024279,
+      "ci95_high": -0.06325453847191922,
+      "share_of_resamples_first_is_better": 0.0,
+      "resamples": 1000,
+      "unit": "variant"
+    },
+    "kmer_plus_nt_minus_kmer_ridge": {
+      "difference_in_pearson": 0.008278760973285448,
+      "ci95_low": 0.003286841176899702,
+      "ci95_high": 0.012849294495214486,
+      "share_of_resamples_first_is_better": 0.999,
+      "resamples": 1000,
+      "unit": "variant"
+    }
+  },
+  "primary_verdict": "pretraining hurt",
+  "seconds": 1508.7
+}

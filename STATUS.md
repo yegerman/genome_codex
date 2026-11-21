@@ -124,11 +124,25 @@ score the same, and a second complete run reproduced every number. The best
 model explains about a quarter of the variance that measurement error leaves
 explainable.
 
+**A frozen pretrained genomic model reads activity worse than k-mer counts.**
+`experiments/008` (protocol pushed before running) put the same holdout
+through Nucleotide Transformer v2 50M, frozen and mean-pooled.
+
+| model | holdout Pearson r |
+|---|---|
+| NT 50M frozen, ridge on layer 6 | 0.383 |
+| k-mer ridge | 0.475 |
+| k-mers + NT | 0.484 |
+
+NT minus k-mers: −0.093 (95% interval −0.122 to −0.063), so by the
+pre-registered rule pretraining hurt. Adding the embedding to k-mers gains
++0.008 (+0.003 to +0.013). This matches experiment 004's ordering on a second,
+far larger dataset. It says nothing about fine-tuning or larger models.
+
 ## Not verified
 
-**No pretrained model has been tested on quantitative activity data.**
-Experiment 004 used one on 106 bacterial sequences only. Whether pretraining
-helps on the MPRA data is unknown.
+**Larger or fine-tuned pretrained models have not been tested.** Only the
+frozen 50M Nucleotide Transformer with mean-pooled tokens has been run.
 
 **Variant effects have not been predicted.** The 26,875 measured one-letter
 pairs have not been used to test whether a model predicts what a change does.

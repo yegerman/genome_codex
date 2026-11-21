@@ -1,0 +1,26 @@
+  embedded 128/55008 (1s)
+  embedded 6528/55008 (22s)
+  embedded 12928/55008 (56s)
+  embedded 19328/55008 (68s)
+  embedded 25728/55008 (81s)
+  embedded 32128/55008 (96s)
+  embedded 38528/55008 (107s)
+  embedded 44928/55008 (122s)
+  embedded 51328/55008 (138s)
+development 50673, holdout 4335
+  layer  0: alpha 10000  CV R2 0.0513
+  layer  3: alpha 10000  CV R2 0.1461
+  layer  6: alpha 1000  CV R2 0.1635
+  layer  9: alpha 10000  CV R2 0.1513
+  layer 12: alpha 1000  CV R2 0.1351
+  nt_ridge      holdout Pearson 0.383  R2 +0.142  (218s)
+  kmer_ridge    holdout Pearson 0.475  R2 +0.225  (240s)
+  kmer_plus_nt  holdout Pearson 0.484  R2 +0.233  (1508s)
+
+--- frozen holdout, chromosomes 7 and 13 ---
+nt_ridge      Pearson 0.383 [0.338, 0.429]  R2 +0.142  clean 0.379  CV 0.405
+kmer_ridge    Pearson 0.475 [0.432, 0.519]  R2 +0.225  clean 0.472  CV 0.497
+kmer_plus_nt  Pearson 0.484 [0.442, 0.525]  R2 +0.233  clean 0.481  CV 0.504
+nt_ridge_minus_kmer_ridge: -0.093 [-0.122, -0.063]
+kmer_plus_nt_minus_kmer_ridge: +0.008 [+0.003, +0.013]
+primary verdict: pretraining hurt
