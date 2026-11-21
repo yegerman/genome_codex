@@ -6,6 +6,6 @@
 .venv/
 __pycache__/
 build/
-data/
+data/cache/
 dist/
 models/
