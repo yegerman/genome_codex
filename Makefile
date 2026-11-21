@@ -1,7 +1,11 @@
-.PHONY: setup verify audit verify-dataset clean
+.PHONY: setup test verify audit verify-dataset clean
 
 setup:
 	./setup.sh --no-verify
+
+# Unit tests for dnakit, the DNA reading/writing library. Seconds, no network.
+test:
+	.venv/bin/python -I tests/test_dnakit.py
 
 verify:
 	.venv/bin/python -I scripts/verify.py

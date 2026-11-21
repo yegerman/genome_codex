@@ -1,7 +1,10 @@
-__pycache__/
-*.py[cod]
-.venv/
-.ipynb_checkpoints/
-.DS_Store
-models/
 *.bundle
+*.egg-info/
+*.py[cod]
+.DS_Store
+.ipynb_checkpoints/
+.venv/
+__pycache__/
+build/
+dist/
+models/

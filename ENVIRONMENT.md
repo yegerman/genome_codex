@@ -25,6 +25,7 @@ Day-to-day commands:
 
 | command | what it does |
 |---|---|
+| `make test` | dnakit unit tests, seconds, no network |
 | `make verify` | re-run 001 and 002 and compare with stored results |
 | `make audit` | leakage and fold-stability audit, about 1 minute |
 | `make verify-dataset` | download the official UCI file and compare |

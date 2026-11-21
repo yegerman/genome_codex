@@ -36,6 +36,10 @@ source .venv/bin/activate
 python -m pip install --quiet --upgrade pip
 echo "==> Installing pinned dependencies (torch is large, this can take a few minutes)"
 python -m pip install --quiet -r requirements.txt
+# --no-deps because requirements.txt already pins everything dnakit needs;
+# letting pip resolve again could quietly move a pinned version.
+echo "==> Installing dnakit (editable)"
+python -m pip install --quiet --no-deps -e .
 
 python - <<'PY'
 import torch, transformers, sklearn, numpy
@@ -46,6 +50,8 @@ print(f"==> Accelerator available to torch: {dev}")
 PY
 
 if [ "${1:-}" != "--no-verify" ]; then
+  echo "==> Running the dnakit test suite"
+  python -I tests/test_dnakit.py
   echo "==> Verifying that the stored results reproduce on this machine"
   python -I scripts/verify.py
 fi
