@@ -1,0 +1,152 @@
+{
+  "experiment": "Tiny masked DNA transformer trained ONLY from scratch on the UCI promoter sequences; NOT an external pretrained DNA foundation model",
+  "dataset": "UCI molecular biology promoter gene sequences",
+  "n": 106,
+  "groups": 69,
+  "architecture": "2-layer, width 32, 4 attention heads, masked nucleotide reconstruction; mean/flatten representations + frozen linear probe",
+  "pretraining": "180 gradient steps/fold, 20% masked bases, only outer-fold train sequences, without labels",
+  "probe": "logistic regression with fixed C 0.03 on fold train labels; tested on group-disjoint holdout",
+  "comparison_to_prior": "prior stronger baseline was supervised one-hot position linear classifier, 100/106 across same group splits",
+  "folds": [
+    {
+      "fold": 0,
+      "n_train": 79,
+      "n_test": 27,
+      "first20_last20_train_loss": [
+        1.4352606415748597,
+        1.3566695928573609
+      ],
+      "heldout_masked_acc": 0.27070070058107376,
+      "heldout_posfreq_acc": 0.2910730723853434,
+      "heldout_unigram_acc": 0.2824270083823661,
+      "elapsed_sec": 5.72
+    },
+    {
+      "fold": 1,
+      "n_train": 79,
+      "n_test": 27,
+      "first20_last20_train_loss": [
+        1.4298215627670288,
+        1.366125339269638
+      ],
+      "heldout_masked_acc": 0.28143319487571716,
+      "heldout_posfreq_acc": 0.31908236818961794,
+      "heldout_unigram_acc": 0.2727439690567983,
+      "elapsed_sec": 5.55
+    },
+    {
+      "fold": 2,
+      "n_train": 80,
+      "n_test": 26,
+      "first20_last20_train_loss": [
+        1.453127259016037,
+        1.358665806055069
+      ],
+      "heldout_masked_acc": 0.28725867345929146,
+      "heldout_posfreq_acc": 0.3089267290882802,
+      "heldout_unigram_acc": 0.2605222371206306,
+      "elapsed_sec": 5.66
+    },
+    {
+      "fold": 3,
+      "n_train": 80,
+      "n_test": 26,
+      "first20_last20_train_loss": [
+        1.4174516141414641,
+        1.350431615114212
+      ],
+      "heldout_masked_acc": 0.27841368317604065,
+      "heldout_posfreq_acc": 0.3143189669301254,
+      "heldout_unigram_acc": 0.32110046228751266,
+      "elapsed_sec": 5.31
+    }
+  ],
+  "metrics": [
+    {
+      "model": "mlm_flatten",
+      "accuracy": 0.9339622641509434,
+      "balanced_accuracy": 0.9339622641509434,
+      "roc_auc": 0.9846920612317551,
+      "confusion_matrix": [
+        [
+          49,
+          4
+        ],
+        [
+          3,
+          50
+        ]
+      ],
+      "correct": 99
+    },
+    {
+      "model": "random_flatten",
+      "accuracy": 0.9433962264150944,
+      "balanced_accuracy": 0.9433962264150944,
+      "roc_auc": 0.9843360626557494,
+      "confusion_matrix": [
+        [
+          50,
+          3
+        ],
+        [
+          3,
+          50
+        ]
+      ],
+      "correct": 100
+    },
+    {
+      "model": "mlm_mean",
+      "accuracy": 0.6698113207547169,
+      "balanced_accuracy": 0.6698113207547169,
+      "roc_auc": 0.7653969384122464,
+      "confusion_matrix": [
+        [
+          34,
+          19
+        ],
+        [
+          16,
+          37
+        ]
+      ],
+      "correct": 71
+    },
+    {
+      "model": "random_mean",
+      "accuracy": 0.6792452830188679,
+      "balanced_accuracy": 0.6792452830188679,
+      "roc_auc": 0.7397650409398362,
+      "confusion_matrix": [
+        [
+          34,
+          19
+        ],
+        [
+          15,
+          38
+        ]
+      ],
+      "correct": 72
+    }
+  ],
+  "limitations": [
+    "Only 106 sequences. Not a true LLM or pretrained DNA foundation model.",
+    "Cannot infer genome-wide rules or inverse-design reliability.",
+    "Masked reconstruction is a proxy for statistical sequence structure, not biological function.",
+    "Fixed probe hyperparameter (no nested tuning); prior baseline had nested tuning, so numbers are not a fair head-to-head model selection experiment."
+  ],
+  "analysis": {
+    "paired_trained_correct_random_wrong": 1,
+    "paired_trained_wrong_random_correct": 2,
+    "paired_balanced_accuracy_diff_MLM_minus_random": -0.009433962264150941,
+    "paired_group_bootstrap_95_ci_diff": [
+      -0.04679034621978877,
+      0.02083333333333326
+    ],
+    "heldout_masked_acc_mean": 0.27945156302303076,
+    "heldout_position_frequency_baseline_acc_mean": 0.30835028414834176,
+    "heldout_unigram_baseline_acc_mean": 0.2841984192118269
+  }
+}

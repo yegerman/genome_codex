@@ -1,0 +1,13 @@
+{
+  "fixed_model": "position_onehot_logistic_regression_C_0.1",
+  "observed_grouped_bacc": 0.9433962264150944,
+  "null_permutations": 400,
+  "p_one_sided_plus_one": 0.0024937655860349127,
+  "null_mean": 0.4954009433962264,
+  "null_q025_q975": [
+    0.3679245283018868,
+    0.6132075471698113
+  ],
+  "null_max": 0.6509433962264151,
+  "notes": "Exploratory permutation analysis: fixed folds on real labels, but permuting labels at individual-sequence level may disrupt original sequence-family class structure; not an independent biological validation."
+}

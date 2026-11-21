@@ -1,0 +1,20 @@
+{
+  "source_url": "https://archive.ics.uci.edu/ml/machine-learning-databases/molecular-biology/promoter-gene-sequences/promoters.data",
+  "upstream_sha256_raw_file": "edd5f6f266ee04a78d4a8d88594e335fb8b5e8f204e63244eec3c2a9e5befd9d",
+  "local_csv_sha256": "752256b6e09c3c7842937ecd88f78757c91b5b8fb6bdd5527ce9711beee2d84f",
+  "upstream_n_records": 106,
+  "local_n_records": 106,
+  "upstream_label_counts": {
+    "+": 53,
+    "-": 53
+  },
+  "identical_as_ordered_records": true,
+  "n_record_mismatches": 0,
+  "record_mismatches": [],
+  "n_upstream_only": 0,
+  "n_local_only": 0,
+  "upstream_only_ids": [],
+  "local_only_ids": [],
+  "verdict": "local transcription matches upstream record-for-record",
+  "note": "Raw bytes differ by design: the local CSV strips tab/whitespace field padding present in the upstream file. The comparison is on normalised (label, id, sequence) records."
+}

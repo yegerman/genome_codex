@@ -1,0 +1,47 @@
+{
+  "method": "Fixed C=.1 logistic regression on position-aware one-hot; grouped 4-fold CV; feature subsets by positions relative to promoter +1; descriptive not causal.",
+  "results": [
+    {
+      "region": "-50_to_-32",
+      "accuracy": 0.9434,
+      "balanced_accuracy": 0.9434,
+      "n_correct": 100
+    },
+    {
+      "region": "-38_to_-25",
+      "accuracy": 0.9151,
+      "balanced_accuracy": 0.9151,
+      "n_correct": 97
+    },
+    {
+      "region": "-25_to_-14",
+      "accuracy": 0.5849,
+      "balanced_accuracy": 0.5849,
+      "n_correct": 62
+    },
+    {
+      "region": "-15_to_-2",
+      "accuracy": 0.7925,
+      "balanced_accuracy": 0.7925,
+      "n_correct": 84
+    },
+    {
+      "region": "-50_to_-21",
+      "accuracy": 0.9151,
+      "balanced_accuracy": 0.9151,
+      "n_correct": 97
+    },
+    {
+      "region": "-21_to_+6",
+      "accuracy": 0.7547,
+      "balanced_accuracy": 0.7547,
+      "n_correct": 80
+    },
+    {
+      "region": "all_positions",
+      "accuracy": 0.9434,
+      "balanced_accuracy": 0.9434,
+      "n_correct": 100
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+# Pinned to the versions verified in the genome_code cloud environment.
+numpy==2.5.3
+scikit-learn==1.9.1
+joblib==1.6.0
+matplotlib==3.11.2
+torch==2.15.0
+transformers==5.23.0

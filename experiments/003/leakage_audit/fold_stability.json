@@ -1,0 +1,104 @@
+{
+  "question": "Is the published 94.34% a stable property, or one draw from a spread created by arbitrary protocol choices?",
+  "partition_n_groups": 69,
+  "published_point_estimate": {
+    "accuracy": 0.9433962264150944,
+    "n_correct": 100,
+    "note": "group labels as emitted by union-find, outer seed 2026"
+  },
+  "relabel_only": {
+    "majority": {
+      "mean": 0.49056603773584906,
+      "sd": 0.0,
+      "min": 0.49056603773584906,
+      "max": 0.49056603773584906,
+      "median": 0.49056603773584906,
+      "n_correct_min": 52,
+      "n_correct_max": 52
+    },
+    "GC_only": {
+      "mean": 0.6745283018867922,
+      "sd": 0.015745716233892076,
+      "min": 0.6415094339622641,
+      "max": 0.7075471698113207,
+      "median": 0.6792452830188679,
+      "n_correct_min": 68,
+      "n_correct_max": 75
+    },
+    "DNA_kmer_3_4": {
+      "mean": 0.8271698113207548,
+      "sd": 0.02985958474205117,
+      "min": 0.7452830188679245,
+      "max": 0.8773584905660378,
+      "median": 0.8301886792452831,
+      "n_correct_min": 79,
+      "n_correct_max": 93
+    },
+    "DNA_position_onehot": {
+      "mean": 0.9086792452830188,
+      "sd": 0.019290606291194484,
+      "min": 0.8679245283018868,
+      "max": 0.9528301886792453,
+      "median": 0.9056603773584906,
+      "n_correct_min": 92,
+      "n_correct_max": 101
+    }
+  },
+  "vary_outer_seed": {
+    "majority": {
+      "mean": 0.49056603773584906,
+      "sd": 0.0,
+      "min": 0.49056603773584906,
+      "max": 0.49056603773584906,
+      "median": 0.49056603773584906,
+      "n_correct_min": 52,
+      "n_correct_max": 52
+    },
+    "GC_only": {
+      "mean": 0.6779245283018867,
+      "sd": 0.016941510272353688,
+      "min": 0.6509433962264151,
+      "max": 0.7075471698113207,
+      "median": 0.6792452830188679,
+      "n_correct_min": 69,
+      "n_correct_max": 75
+    },
+    "DNA_kmer_3_4": {
+      "mean": 0.8256603773584906,
+      "sd": 0.030509462419042628,
+      "min": 0.7641509433962265,
+      "max": 0.8962264150943396,
+      "median": 0.8254716981132075,
+      "n_correct_min": 81,
+      "n_correct_max": 95
+    },
+    "DNA_position_onehot": {
+      "mean": 0.9124528301886792,
+      "sd": 0.018482784623109177,
+      "min": 0.8679245283018868,
+      "max": 0.9528301886792453,
+      "median": 0.9150943396226415,
+      "n_correct_min": 92,
+      "n_correct_max": 101
+    }
+  },
+  "pooled_positional_model": {
+    "n_runs": 100,
+    "mean_accuracy": 0.910566037735849,
+    "sd_accuracy": 0.018890780895892544,
+    "percentile_of_published": 97.0,
+    "range_n_correct": [
+      92,
+      101
+    ]
+  },
+  "ranking_stability": {
+    "times_each_model_was_best": {
+      "DNA_position_onehot": 99,
+      "DNA_kmer_3_4": 1
+    },
+    "positional_beats_kmer": "99/100",
+    "positional_beats_gc": "100/100"
+  },
+  "interpretation": "The partition of sequences into similarity groups is identical in every relabelling run. Any movement there is protocol noise, not biology."
+}
