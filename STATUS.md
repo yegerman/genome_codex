@@ -103,11 +103,35 @@ change +3.93 against +0.10, and +2.32 against +0.23), so the activity column
 measures activity. This closes the question `HANDOFF.md` left open. It is
 reporter activity on a plasmid in one cell line, not native gene expression.
 
+**Sequence predicts measured activity, modestly.** `experiments/007` fitted
+baselines to the ENCSR997GVD MPRA data under a protocol committed before any
+model was fitted, and scored them once on a frozen holdout (chromosomes 7 and
+13; 4,335 sequences from 2,155 variants).
+
+| model | holdout Pearson r | R² |
+|---|---|---|
+| GC content | 0.194 | 0.036 |
+| position-by-base ridge | 0.239 | 0.056 |
+| CNN, 3 seeds averaged | 0.452 | 0.201 |
+| k-mer ridge (1–6-mers) | 0.475 | 0.225 |
+| measurement ceiling | about 0.934 | about 0.873 |
+
+Short words beat position by +0.236 (95% interval +0.198 to +0.275), the
+opposite of experiment 001. The untuned CNN and k-mer ridge cannot be told
+apart (+0.023, interval −0.008 to +0.056). Cross-validation agrees with the
+holdout, the 3,456 holdout sequences sharing no 30-mer with development data
+score the same, and a second complete run reproduced every number. The best
+model explains about a quarter of the variance that measurement error leaves
+explainable.
+
 ## Not verified
 
-**No model has been fitted to quantitative activity data.** The data are now
-in hand (see above) but nothing has been trained or evaluated on them. Any
-statement about how well sequence predicts activity would be invention.
+**No pretrained model has been tested on quantitative activity data.**
+Experiment 004 used one on 106 bacterial sequences only. Whether pretraining
+helps on the MPRA data is unknown.
+
+**Variant effects have not been predicted.** The 26,875 measured one-letter
+pairs have not been used to test whether a model predicts what a change does.
 
 **The environment setup script has run on one local machine only.** On
 2026-11-21, `./setup.sh` built `.venv` from empty on an Apple M5 Pro (macOS,

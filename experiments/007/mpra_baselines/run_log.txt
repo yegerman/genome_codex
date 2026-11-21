@@ -1,0 +1,30 @@
+units 55008: development 50673, holdout 4335
+fold sizes [10128, 10001, 9940, 9944, 10660]
+leakage audit: 879 of 4335 holdout sequences share a 30-mer with development (20.3%)
+noise ceiling on holdout: Pearson about 0.934
+  mean          holdout Pearson   n/a   R2 -0.000  (3s)
+  gc            holdout Pearson 0.194  R2 +0.036  (3s)
+  kmer_ridge    holdout Pearson 0.475  R2 +0.225  (236s)
+  onehot_ridge  holdout Pearson 0.239  R2 +0.056  (239s)
+  cnn on mps
+    cv fold 0: Pearson 0.437 (best epoch 11, 260s)
+    cv fold 1: Pearson 0.439 (best epoch 5, 273s)
+    cv fold 2: Pearson 0.431 (best epoch 2, 281s)
+    cv fold 3: Pearson 0.412 (best epoch 2, 289s)
+    cv fold 4: Pearson 0.463 (best epoch 6, 303s)
+    seed 11: holdout Pearson 0.418 (324s)
+    seed 12: holdout Pearson 0.410 (334s)
+    seed 13: holdout Pearson 0.405 (347s)
+  cnn           holdout Pearson 0.452  R2 +0.201  (347s)
+
+--- frozen holdout, chromosomes 7 and 13 ---
+model          Pearson          95% CI  Spearman      R2    MAE     CV Pearson
+mean               n/a                       n/a  -0.000  0.789            n/a
+gc               0.194  [0.149, 0.240]     0.105  +0.036  0.760 0.195 +/- 0.016
+kmer_ridge       0.475  [0.432, 0.519]     0.466  +0.225  0.672 0.497 +/- 0.024
+onehot_ridge     0.239  [0.202, 0.279]     0.187  +0.056  0.753 0.229 +/- 0.014
+cnn              0.452  [0.408, 0.498]     0.417  +0.201  0.667 0.437 +/- 0.018
+noise ceiling: Pearson about 0.934, R2 about 0.873
+post hoc kmer_ridge_minus_cnn: +0.023 [-0.008, +0.056]
+post hoc kmer_ridge_minus_onehot_ridge: +0.236 [+0.198, +0.275]
+wrote baseline_results.json and holdout_predictions.csv

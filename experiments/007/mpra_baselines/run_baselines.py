@@ -218,7 +218,9 @@ def score(y, predicted):
            "r2": 1.0 - residual / total,
            "mae": float(np.abs(y - predicted).mean()),
            "pearson": None, "spearman": None}
-    if predicted.std() > 0:
+    # np.std of a constant array can be 1e-17 rather than 0, so test the
+    # range: a constant prediction has no correlation with anything.
+    if np.ptp(predicted) > 1e-12:
         out["pearson"] = float(np.corrcoef(y, predicted)[0, 1])
         out["spearman"] = float(np.corrcoef(rankdata(y), rankdata(predicted))[0, 1])
     return out
@@ -226,7 +228,7 @@ def score(y, predicted):
 
 def bootstrap_pearson(y, predicted, groups):
     """95% interval resampling whole variants, which are the independent unit."""
-    if np.std(predicted) == 0:
+    if np.ptp(predicted) <= 1e-12:
         return None
     members = defaultdict(list)
     for index, group in enumerate(groups):
@@ -241,6 +243,33 @@ def bootstrap_pearson(y, predicted, groups):
     low, high = np.percentile(values, [2.5, 97.5])
     return {"low": float(low), "high": float(high), "resamples": BOOTSTRAPS,
             "unit": "variant", "n_variants": len(blocks)}
+
+
+def paired_bootstrap_difference(y, first, second, groups):
+    """POST HOC, added after the first run: is `first` better than `second`?
+
+    Two overlapping intervals do not answer that, because both models are
+    scored on the same sequences. This resamples whole variants and takes the
+    difference in Pearson r inside each resample.
+    """
+    members = defaultdict(list)
+    for index, group in enumerate(groups):
+        members[group].append(index)
+    blocks = [np.array(v) for v in members.values()]
+    rng = np.random.default_rng(2026)
+    differences = []
+    for _ in range(BOOTSTRAPS):
+        picks = rng.integers(0, len(blocks), len(blocks))
+        index = np.concatenate([blocks[i] for i in picks])
+        differences.append(np.corrcoef(y[index], first[index])[0, 1]
+                           - np.corrcoef(y[index], second[index])[0, 1])
+    differences = np.array(differences)
+    low, high = np.percentile(differences, [2.5, 97.5])
+    return {"difference_in_pearson": float(np.corrcoef(y, first)[0, 1]
+                                           - np.corrcoef(y, second)[0, 1]),
+            "ci95_low": float(low), "ci95_high": float(high),
+            "share_of_resamples_first_is_better": float((differences > 0).mean()),
+            "resamples": BOOTSTRAPS, "unit": "variant"}
 
 
 def noise_ceiling(y, se):
@@ -516,6 +545,16 @@ def main():
             "cv_training": training_logs, "holdout_training": seed_logs,
             "settings": CNN, "device": device})
 
+    post_hoc = {
+        "note": ("added after the first run, so not part of the "
+                 "pre-registered protocol"),
+        "kmer_ridge_minus_cnn": paired_bootstrap_difference(
+            y_hold, predictions["kmer_ridge"], predictions["cnn"], groups_hold),
+        "kmer_ridge_minus_onehot_ridge": paired_bootstrap_difference(
+            y_hold, predictions["kmer_ridge"], predictions["onehot_ridge"],
+            groups_hold),
+    }
+
     report = {
         "question": ("How well does a 200-base DNA sequence predict its "
                      "measured MPRA activity in K562?"),
@@ -529,6 +568,7 @@ def main():
         "leakage_audit": audit,
         "noise_ceiling": ceiling,
         "models": results,
+        "post_hoc": post_hoc,
         "environment": {"numpy": np.__version__, "scikit_learn": sklearn.__version__,
                         "torch": torch.__version__, "device": device,
                         "seconds": round(time.time() - started, 1)},
@@ -562,6 +602,10 @@ def main():
               f"{'%.3f +/- %.3f' % (cv['pearson_mean'], cv['pearson_sd']):>14}")
     print(f"noise ceiling: Pearson about {ceiling['holdout']['max_pearson']:.3f}, "
           f"R2 about {ceiling['holdout']['max_r2']:.3f}")
+    for name, d in post_hoc.items():
+        if isinstance(d, dict):
+            print(f"post hoc {name}: {d['difference_in_pearson']:+.3f} "
+                  f"[{d['ci95_low']:+.3f}, {d['ci95_high']:+.3f}]")
     print("wrote baseline_results.json and holdout_predictions.csv")
 
 
