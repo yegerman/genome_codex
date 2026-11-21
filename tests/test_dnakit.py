@@ -391,6 +391,268 @@ def test_cli():
               out.returncode == 1 and "error:" in out.stderr, out.stderr)
 
 
+# ----------------------------------------------------------------- motifs
+def test_chance_maths():
+    from dnakit import motifs
+
+    equal("exact pattern has one neighbour",
+          motifs.neighbourhood_size(6, 0), 1)
+    # 6 positions x 3 alternative bases, plus the pattern itself.
+    equal("one mismatch gives 19 strings",
+          motifs.neighbourhood_size(6, 1), 19)
+    equal("three mismatches in a 3-mer covers everything",
+          motifs.neighbourhood_size(3, 3), 64)
+
+    # Poisson upper tail: P(X >= 1) with lambda = 1 is 1 - e^-1.
+    import math
+    check("P(at least 1) at rate 1 is 1 - 1/e",
+          abs(motifs.chance_probability(1, 1.0) - (1 - math.exp(-1))) < 1e-12,
+          str(motifs.chance_probability(1, 1.0)))
+    equal("no matches is never surprising", motifs.chance_probability(0, 5.0), 1.0)
+    check("two hits where 0.8 are expected is not significant",
+          motifs.chance_probability(2, 0.8) > 0.05,
+          f"{motifs.chance_probability(2, 0.8):.3f}")
+    check("ten hits where 0.8 are expected is significant",
+          motifs.chance_probability(10, 0.8) < 0.05)
+
+    # A 6-mer in 1000 bases, both strands: about 2 x 995 / 4096.
+    pribnow = motifs.BY_NAME["-10 box (Pribnow box)"]
+    expected = motifs.expected_by_chance(pribnow, 1000, both_strands=True)
+    check("chance expectation is in the right range", 8 < expected < 12,
+          f"{expected:.2f}")
+    equal("a sequence shorter than the motif expects none",
+          motifs.expected_by_chance(pribnow, 3), 0.0)
+
+
+def test_motif_finding():
+    from dnakit import motifs
+
+    pribnow = motifs.BY_NAME["-10 box (Pribnow box)"]
+    hits = motifs.find("GGGGTATAATGGGG", pribnow, both_strands=False)
+    equal("exact Pribnow box found once", len(hits), 1)
+    equal("found at the right position", hits[0]["start"], 4)
+    equal("recorded as exact", hits[0]["mismatches"], 0)
+
+    # One mismatch is inside this motif's budget, two is not.
+    equal("one mismatch accepted",
+          len(motifs.find("GGGGTATCATGGGG", pribnow, both_strands=False)), 1)
+    equal("two mismatches rejected",
+          len(motifs.find("GGGGTACCATGGGG", pribnow, both_strands=False)), 0)
+
+    found = motifs.find_all("GGGGTATAATGGGG", organism=motifs.BACTERIA,
+                            both_strands=False, skip_codons=True)
+    check("find_all reports the Pribnow box",
+          any(h["motif"] == pribnow.name for h in found))
+    check("every hit carries a chance probability",
+          all("chance_probability" in h for h in found))
+    check("eukaryotic motifs excluded when bacteria assumed",
+          all(h["organism"] in (motifs.BACTERIA, motifs.ANY) for h in found))
+
+
+# ----------------------------------------------------------------- explain
+def test_explain():
+    from dnakit import explain as explainer
+
+    reading = explainer.explain(HBB_CDS_START + "TAA", organism="eukaryote")
+    equal("length reported", reading["overview"]["length_nt"], 96)
+    equal("six reading frames", reading["overview"]["reading_frames_possible"], 6)
+    equal("one complete recipe found",
+          len(reading["open_reading_frames"]), 1)
+    orf = reading["open_reading_frames"][0]
+    equal("recipe is 31 steps", orf["length_aa"], 31)
+    equal("recipe is marked certain", orf["certainty"], "certain")
+    check("narrative is written", len(reading["narrative"]) >= 4)
+    check("narrative states what it cannot tell you",
+          any("cannot tell you" in line for line in reading["narrative"]))
+
+    # A sequence with no complete recipe must say so rather than invent one.
+    nothing = explainer.explain("ACGT" * 30, organism="eukaryote")
+    equal("no recipe found", nothing["open_reading_frames"], [])
+    check("absence is stated plainly",
+          any("No complete protein recipe" in line
+              for line in nothing["narrative"]))
+
+
+def test_listing():
+    from dnakit import explain as explainer
+
+    rows = explainer.listing(HBB_CDS_START + "TAA")
+    equal("one row per codon", len(rows), 32)
+    equal("first instruction is at position 0", rows[0]["position"], 0)
+    equal("first instruction is the start codon", rows[0]["codon"], "ATG")
+    check("first instruction explained as START", "START" in rows[0]["means"])
+    equal("last instruction is a stop codon", rows[-1]["codon"], "TAA")
+    check("last instruction explained as STOP", "STOP" in rows[-1]["means"])
+    equal("middle instruction names its building block",
+          rows[1]["amino_acid_name"], "Val")
+    check("every row is marked certain",
+          all(row["certainty"] == "certain" for row in rows))
+
+    text = explainer.listing_as_text(rows, max_rows=3)
+    check("listing truncates with a note", "29 more instructions" in text, text)
+    check("listing shows all when asked",
+          "more instructions" not in
+          explainer.listing_as_text(rows, max_rows=3, show_all=True))
+
+    marked = explainer.annotated_sequence(
+        "GGGGTATAATGGGG",
+        [{"motif": "-10 box", "start": 4, "end": 10, "plain": "switch"}])
+    check("annotated sequence marks the motif", "aaaaaa" in marked, marked)
+    check("annotated sequence prints a legend", "legend" in marked)
+
+
+# ------------------------------------------------------------------ review
+def test_lint():
+    from dnakit import review
+
+    clean = review.lint(HBB_CDS_START + "TAA")
+    equal("a well-formed recipe has no findings", clean, [])
+
+    no_start = review.lint("GTG" + HBB_CDS_START[3:] + "TAA")
+    check("missing start reported",
+          any(f.rule == "missing-start" for f in no_start))
+
+    no_stop = review.lint(HBB_CDS_START)
+    check("missing stop reported",
+          any(f.rule == "missing-stop" for f in no_stop))
+
+    bad_length = review.lint(HBB_CDS_START + "TA")
+    check("length not a multiple of three reported",
+          any(f.rule == "frame-length" for f in bad_length))
+
+    early = review.lint(HBB_CDS_START[:18] + "TAA" + HBB_CDS_START[21:] + "TAA")
+    premature = [f for f in early if f.rule == "premature-stop"]
+    equal("premature stop reported once", len(premature), 1)
+    equal("premature stop located", premature[0].position, 18)
+    equal("premature stop is an error", premature[0].severity, "error")
+
+    ambiguous = review.lint("ATGNNNTAA")
+    check("ambiguous letters warned about",
+          any(f.rule == "ambiguous-base" for f in ambiguous))
+    equal("ambiguity is a warning, not an error",
+          [f.severity for f in ambiguous if f.rule == "ambiguous-base"],
+          ["warning"])
+
+    # Non-coding mode drops the coding rules but keeps the universal ones.
+    equal("non-coding mode ignores start and stop",
+          review.lint("ACGTACGT", expect_coding=False), [])
+
+
+def test_compare():
+    from dnakit import review
+
+    reference = HBB_CDS_START + "TAA"
+
+    def swap(codon_number, new):
+        index = (codon_number - 1) * 3
+        return reference[:index] + new + reference[index + 3:]
+
+    equal("identical sequences",
+          review.compare(reference, reference)["consequence"], "identical")
+
+    # Codon 7 is GAG, coding glutamate.
+    equal("reference codon 7", reference[18:21], "GAG")
+
+    silent = review.compare(reference, swap(7, "GAA"))
+    equal("same amino acid is synonymous", silent["consequence"], "synonymous")
+    equal("protein unchanged by a synonymous change",
+          silent["reference_protein"], silent["variant_protein"])
+
+    missense = review.compare(reference, swap(7, "GTG"))
+    equal("different amino acid is missense", missense["consequence"], "missense")
+    equal("missense notation", missense["changes"][0]["notation"], "E7V")
+    equal("protein stays the same length",
+          len(missense["variant_protein"]), len(missense["reference_protein"]))
+
+    nonsense = review.compare(reference, swap(7, "TAA"))
+    equal("a new stop codon is nonsense", nonsense["consequence"], "nonsense")
+    check("nonsense says how much is lost",
+          "25 steps early" in nonsense["plain"], nonsense["plain"])
+
+    start_lost = review.compare(reference, swap(1, "AAG"))
+    equal("losing the start codon is reported",
+          start_lost["consequence"], "start lost")
+
+    stop_lost = review.compare(reference, reference[:-3] + "CAA")
+    equal("losing the stop codon is reported",
+          stop_lost["consequence"], "stop lost")
+
+    frameshift = review.compare(reference, reference[:18] + reference[19:])
+    equal("a one-letter deletion is a frameshift",
+          frameshift["consequence"], "frameshift")
+    equal("frameshift located", frameshift["changes"][0]["position"], 18)
+    check("frameshift protein diverges after the change",
+          frameshift["variant_protein"][:6] == "MVHLTP"
+          and frameshift["variant_protein"][6:] !=
+          frameshift["reference_protein"][6:],
+          frameshift["variant_protein"])
+
+    in_frame = review.compare(reference, reference[:18] + reference[21:])
+    equal("a three-letter deletion keeps the frame",
+          in_frame["consequence"], "in-frame deletion")
+    equal("in-frame deletion shortens the protein by one",
+          len(in_frame["variant_protein"]),
+          len(in_frame["reference_protein"]) - 1)
+
+    insertion = review.compare(reference, reference[:18] + "GGG" + reference[18:])
+    equal("a three-letter insertion keeps the frame",
+          insertion["consequence"], "in-frame insertion")
+
+    check("numbering convention is stated",
+          "initiator methionine" in review.compare(reference, swap(7, "GTG"))["numbering"])
+
+
+def test_review_combined():
+    from dnakit import review
+
+    reference = HBB_CDS_START + "TAA"
+    report = review.review(reference)
+    check("a clean sequence reviews clean", report["clean"])
+    equal("no comparison without a reference", report["comparison"], None)
+
+    broken = reference[:18] + "TAA" + reference[21:]
+    report = review.review(broken, reference=reference)
+    check("problems are reported", not report["clean"])
+    equal("comparison included when a reference is given",
+          report["comparison"]["consequence"], "nonsense")
+
+
+def test_cli_explain_lint_diff():
+    with tempfile.TemporaryDirectory() as tmp:
+        reference = Path(tmp) / "ref.fasta"
+        dnaio.write_fasta([Record(id="ref", sequence=HBB_CDS_START + "TAA")],
+                          reference)
+        variant = Path(tmp) / "var.fasta"
+        dnaio.write_fasta(
+            [Record(id="var",
+                    sequence=HBB_CDS_START[:18] + "GTG" + HBB_CDS_START[21:]
+                    + "TAA")], variant)
+
+        out = run_cli("explain", str(reference), "--organism", "eukaryote")
+        check("cli explain succeeds", out.returncode == 0, out.stderr)
+        check("cli explain describes the recipe",
+              "complete recipe" in out.stdout, out.stdout)
+        check("cli explain lists instructions",
+              "START" in out.stdout, out.stdout)
+
+        out = run_cli("lint", str(reference))
+        check("cli lint succeeds on a clean sequence",
+              out.returncode == 0 and "clean" in out.stdout, out.stdout)
+
+        broken = Path(tmp) / "broken.fasta"
+        dnaio.write_fasta([Record(id="broken", sequence="ATGAAA")], broken)
+        out = run_cli("lint", str(broken))
+        check("cli lint reports a missing stop",
+              "missing-stop" in out.stdout or "stop codon" in out.stdout,
+              out.stdout)
+
+        out = run_cli("diff", str(variant), "-r", str(reference))
+        check("cli diff succeeds", out.returncode == 0, out.stderr)
+        check("cli diff names the consequence",
+              "missense" in out.stdout, out.stdout)
+        check("cli diff gives the notation", "E7V" in out.stdout, out.stdout)
+
+
 def main():
     tests = [value for name, value in sorted(globals().items())
              if name.startswith("test_") and callable(value)]

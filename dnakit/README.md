@@ -1,10 +1,11 @@
-# dnakit — read DNA from files, write it back out
+# dnakit — read DNA, say what it does, review it like source code
 
 The repository's experiments measure DNA. This library is the layer under
 them: it gets sequence out of real files, interprets it with the standard
-genetic code, and writes it back in a format other tools accept.
+genetic code, explains in plain words what a stretch does, checks its syntax,
+and writes it back in a format other tools accept.
 
-Install comes with `./setup.sh`. Tests: `make test` (94 checks, no network).
+Install comes with `./setup.sh`. Tests: `make test` (172 checks, no network).
 
 Runnable straight away, against data already in the repository:
 
@@ -27,6 +28,59 @@ dnakit promoter  region.fasta --scan --top 5
 
 Any command takes `--json` for machine-readable output and `--limit N` to stop
 after N records. Both work before or after the subcommand.
+
+## Explaining — what does this DNA do?
+
+```bash
+dnakit explain gene.fasta --organism eukaryote      # plain-words reading
+dnakit explain gene.fasta --marks --all             # mark signals, list every step
+```
+
+It answers in sentences: how long the sequence is, whether it holds a
+complete protein recipe, which control signals appear, and — stated
+explicitly every time — what the reading cannot tell you. Then it prints the
+sequence as an annotated instruction listing:
+
+```
+   pos  codon  aa   what this instruction does
+     0  ATG    M    START — begin building the protein here
+     3  GTG    V    add Val
+    93  TAA    *    STOP — the protein is finished and released
+```
+
+## Reviewing — is there a bug?
+
+DNA has real syntax, and breaking it produces defects that read like software
+bugs. `lint` checks the syntax; `diff` compares a variant to a reference.
+
+```bash
+dnakit lint gene.fasta                         # syntax check
+dnakit diff variant.fasta -r reference.fasta   # what a change does
+```
+
+| DNA change | what `diff` calls it | the software equivalent |
+|---|---|---|
+| letter swap, same amino acid | `synonymous` | reformatting: output identical |
+| letter swap, different amino acid | `missense` | one value changed |
+| letter swap creating a stop | `nonsense` | an early `return` |
+| stop codon destroyed | `stop lost` | a block that never closes |
+| 1 or 2 letters added or removed | `frameshift` | **off-by-one: everything after is corrupted** |
+| 3 letters added or removed | `in-frame` | one step inserted or deleted, rest intact |
+
+The frameshift is the one worth seeing. Deleting a single letter from the
+beta-globin fragment turns `MVHLTPEEKSAVTALWGKVNVDEVGGEALGR` into
+`MVHLTPRRSLPLLPCGAR*TWMKLVVRPWAG` — correct up to the deletion, unrelated
+after it.
+
+**Scope.** `diff` reports what two strings differ by and what that does to
+the protein under the genetic code. It does not propose edits to anyone's
+genome, design a correction, or claim a difference is a disease. Naming the
+reference letter at a position is a statement about two strings.
+
+Amino acids are numbered from 1 at the initiator methionine. Clinical names
+usually number the mature protein, after that methionine is removed, a shift
+of one — so the change this tool calls `E7V` in beta-globin is the one
+published as β6 Glu→Val. Every comparison prints this note.
 
 Formats read: FASTA (`.fa .fasta .fna .ffn .frn`), the ORIGIN block of GenBank
 flat files (`.gb .gbk .genbank`), the UCI promoter CSV (`.csv .data`), and
@@ -53,6 +107,26 @@ protein = translate(records[0].sequence, stop_at_stop=True)
 orfs = find_orfs(records[0].sequence, min_aa=50)
 write_fasta([r.reverse_complemented() for r in records], "flipped.fasta")
 ```
+
+## How far the code analogy actually goes
+
+It holds in places and breaks in others. Where it breaks matters more.
+
+| software | DNA | holds? |
+|---|---|---|
+| function | gene: defined start, defined end, produces one output | yes |
+| entry point | ribosome binding site, where reading begins | yes |
+| `if` condition | transcription-factor site: run this gene only if the factor is present | yes |
+| comment, stripped before running | intron: transcribed, then cut out before translation | yes |
+| off-by-one parser bug | frameshift | yes, exactly |
+| reusable module | protein domain, reused across unrelated proteins | roughly |
+| class and inheritance | gene family from duplication then divergence | loosely; copy-and-diverge, with no inheritance mechanism |
+| one file, one meaning | the same letters are read in up to 6 frames, on 2 strands, often overlapping | **no** |
+| deterministic execution | rates vary by cell type, moment and chance | **no** |
+| every line executes | most DNA codes for no protein at all | **no** |
+
+The last three are why this library reports what a sequence *says*, never
+what it does in a living cell. That difference is the whole discipline.
 
 ## The two layers, kept apart
 

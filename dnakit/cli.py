@@ -6,6 +6,9 @@
     python -m dnakit revcomp   FILE              the other strand, as FASTA
     python -m dnakit write     FILE -o OUT.fa    convert any input to FASTA
     python -m dnakit promoter  FILE [--scan]     score with the 001 model
+    python -m dnakit explain   FILE              what this DNA does, in words
+    python -m dnakit lint      FILE              check its syntax
+    python -m dnakit diff      FILE -r REF.fa    what a change would do
 
 Add --json to any command for machine-readable output.
 """
@@ -16,6 +19,7 @@ import sys
 from . import io as dnaio
 from . import sequence as seq
 from .io import Record
+from .sequence import reverse_complement
 
 
 def _records(path, limit=None):
@@ -90,6 +94,96 @@ def cmd_write(args):
     count = dnaio.write_fasta(records, args.out, line_width=args.line_width)
     print(f"wrote {count} record(s) to {args.out}")
     return {"written": count, "path": args.out}
+
+
+def cmd_explain(args):
+    from . import explain as explainer
+
+    out = []
+    for record in _records(args.file, args.limit):
+        reading = explainer.explain(record.sequence, organism=args.organism,
+                                    min_aa=args.min_aa, use_model=args.model)
+        reading["id"] = record.id
+        out.append(reading)
+        if args.json:
+            continue
+
+        print(f"=== {record.id}" + (f"  {record.description}"
+                                    if record.description else ""))
+        for line in reading["narrative"]:
+            print(line if line.startswith("  ") else f"\n{line}")
+
+        if reading["signal_hits"] and args.marks:
+            print("\nThe sequence with its signals marked:")
+            print(explainer.annotated_sequence(record.sequence,
+                                               reading["signal_hits"]))
+
+        if reading["open_reading_frames"]:
+            best = reading["open_reading_frames"][0]
+            print(f"\nThe instructions, read one by one "
+                  f"(positions {best['span']}):")
+            source = (record.sequence if best["strand"] == "+"
+                      else reverse_complement(record.sequence))
+            rows = explainer.listing(source, start=best["start"],
+                                     end=best["end"])
+            print(explainer.listing_as_text(rows, max_rows=args.rows,
+                                            show_all=args.all))
+    return out
+
+
+def cmd_lint(args):
+    from . import review as reviewer
+
+    out = []
+    for record in _records(args.file, args.limit):
+        report = reviewer.review(record.sequence,
+                                 expect_coding=not args.not_coding)
+        report["id"] = record.id
+        out.append(report)
+        if args.json:
+            continue
+        counts = report["counts"]
+        status = "clean" if report["clean"] else "problems found"
+        print(f"=== {record.id}: {status} "
+              f"({counts['error']} error, {counts['warning']} warning)")
+        for finding in report["findings"]:
+            print(f"  {finding['severity'].upper():<8} "
+                  f"position {finding['position']}: {finding['message']}")
+            print(f"           {finding['plain']}")
+            if finding["detail"]:
+                print(f"           ({finding['detail']})")
+        if report["clean"] and not report["findings"]:
+            print("  Reads as a complete, well-formed protein recipe.")
+    return out
+
+
+def cmd_diff(args):
+    from . import review as reviewer
+
+    reference = dnaio.read(args.reference)[0]
+    variants = _records(args.file, args.limit)
+    out = []
+    for variant in variants:
+        result = reviewer.compare(reference.sequence, variant.sequence)
+        result["reference_id"] = reference.id
+        result["variant_id"] = variant.id
+        out.append(result)
+        if args.json:
+            continue
+        print(f"=== {reference.id} -> {variant.id}")
+        print(f"  consequence: {result['consequence']}")
+        if result["changes"]:
+            for change in result["changes"]:
+                label = change.get("notation", "")
+                print(f"  change: {change['type']} at position "
+                      f"{change['position']}"
+                      + (f"  ({label})" if label else ""))
+        print(f"\n  {result['plain']}")
+        if result["reference_protein"] != result["variant_protein"]:
+            print(f"\n  protein before: {result['reference_protein']}")
+            print(f"  protein after:  {result['variant_protein']}")
+        print(f"\n  note: {result['numbering']}")
+    return out
 
 
 def cmd_promoter(args):
@@ -173,6 +267,34 @@ def build_parser():
     write.add_argument("--line-width", type=int, default=60)
     write.set_defaults(func=cmd_write)
 
+    explain = subparsers.add_parser(
+        "explain", help="say in plain words what a sequence does")
+    explain.add_argument("--organism", default="any",
+                         choices=("any", "bacteria", "eukaryote"),
+                         help="which control signals to consider")
+    explain.add_argument("--min-aa", type=int, default=25)
+    explain.add_argument("--rows", type=int, default=12,
+                         help="instructions to list before truncating")
+    explain.add_argument("--all", action="store_true",
+                         help="list every instruction")
+    explain.add_argument("--marks", action="store_true",
+                         help="print the sequence with signals marked")
+    explain.add_argument("--model", action="store_true",
+                         help="also score it with the experiment 001 model")
+    explain.set_defaults(func=cmd_explain)
+
+    lint = subparsers.add_parser(
+        "lint", help="check the sequence's syntax, like a linter")
+    lint.add_argument("--not-coding", action="store_true",
+                      help="skip the rules that assume a coding sequence")
+    lint.set_defaults(func=cmd_lint)
+
+    diff = subparsers.add_parser(
+        "diff", help="compare a variant against a reference sequence")
+    diff.add_argument("-r", "--reference", required=True,
+                      help="the reference sequence file")
+    diff.set_defaults(func=cmd_diff)
+
     prom = subparsers.add_parser(
         "promoter", help="score with the experiment 001 positional model")
     prom.add_argument("--scan", action="store_true",
@@ -181,7 +303,8 @@ def build_parser():
     prom.add_argument("--top", type=int, default=10)
     prom.set_defaults(func=cmd_promoter)
 
-    for sub in (read, translate, orfs, revcomp, write, prom):
+    for sub in (read, translate, orfs, revcomp, write, prom, explain, lint,
+                diff):
         sub.add_argument("file", help="FASTA, GenBank, UCI CSV or plain text")
 
     return parser

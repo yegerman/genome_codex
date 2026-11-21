@@ -65,6 +65,27 @@ to the positional model 20 of 20 times. This is one frozen 50M model on 106
 short sequences; it says nothing yet about fine-tuning, larger models or
 quantitative activity.
 
+**The textbook −10 box is real signal in this dataset.** `experiments/005`
+counted the bacterial promoter boxes across all 106 sequences, with the test
+fixed before looking.
+
+| box | promoters | non-promoters | one-sided Fisher p |
+|---|---|---|---|
+| −10 `TATAAT` | 39/53 (74%) | 3/53 (6%) | 8.9 × 10⁻¹⁴ |
+| −35 `TTGACA` | 26/53 (49%) | 19/53 (36%) | 0.12 |
+
+The −10 matches cluster at window positions 36–37, inside the span where the
+experiment 001 model puts its strongest weights: a fixed pattern and a learned
+model agree on where the signal is. The −35 box is not enriched by presence
+alone. Positions were read off this data, so they carry no p-value.
+
+**`dnakit` reads, explains and reviews sequence.** 172 tests, no network. It
+translates against the published start of human beta-globin, classifies
+synonymous, missense, nonsense, stop-loss, start-loss, frameshift and in-frame
+changes, and reports motif matches with Poisson odds of coincidence. It
+reports what a sequence says under the genetic code, never what it does in a
+cell.
+
 ## Not verified
 
 **No quantitative sequence-to-activity dataset has been obtained.** The MPRA

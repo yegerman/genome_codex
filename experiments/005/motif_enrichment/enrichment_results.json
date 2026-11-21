@@ -1,0 +1,148 @@
+{
+  "question": "Are the textbook bacterial promoter boxes more common in the 53 UCI promoters than in the 53 non-promoters?",
+  "dataset": "UCI promoter gene sequences, 106 x 57 bases",
+  "test": "one-sided Fisher exact, presence anywhere on the given strand",
+  "results": [
+    {
+      "motif": "-10 box (Pribnow box)",
+      "consensus": "TATAAT",
+      "max_mismatches": 1,
+      "strand": "given strand only",
+      "counts": {
+        "promoter": {
+          "n": 53,
+          "with_match": 39
+        },
+        "non_promoter": {
+          "n": 53,
+          "with_match": 3
+        }
+      },
+      "fraction_with_match": {
+        "promoter": 0.7358490566037735,
+        "non_promoter": 0.05660377358490566
+      },
+      "fisher_one_sided_p": 8.94110340472554e-14,
+      "enriched_in_promoters_at_0.05": true,
+      "match_start_positions": {
+        "promoter": {
+          "1": 1,
+          "2": 2,
+          "3": 1,
+          "4": 2,
+          "5": 2,
+          "6": 1,
+          "7": 1,
+          "8": 1,
+          "14": 1,
+          "18": 1,
+          "24": 1,
+          "28": 1,
+          "30": 1,
+          "31": 1,
+          "32": 1,
+          "34": 1,
+          "35": 1,
+          "36": 13,
+          "37": 9,
+          "38": 2,
+          "39": 1,
+          "42": 1,
+          "51": 1
+        },
+        "non_promoter": {
+          "10": 1,
+          "22": 1,
+          "39": 1
+        }
+      },
+      "most_common_starts_in_promoters": [
+        {
+          "start": 36,
+          "count": 13
+        },
+        {
+          "start": 37,
+          "count": 9
+        },
+        {
+          "start": 2,
+          "count": 2
+        }
+      ],
+      "position_note": "descriptive only; a position chosen from this data cannot be tested on the same data"
+    },
+    {
+      "motif": "-35 box",
+      "consensus": "TTGACA",
+      "max_mismatches": 1,
+      "strand": "given strand only",
+      "counts": {
+        "promoter": {
+          "n": 53,
+          "with_match": 26
+        },
+        "non_promoter": {
+          "n": 53,
+          "with_match": 19
+        }
+      },
+      "fraction_with_match": {
+        "promoter": 0.49056603773584906,
+        "non_promoter": 0.3584905660377358
+      },
+      "fisher_one_sided_p": 0.11912349002129165,
+      "enriched_in_promoters_at_0.05": false,
+      "match_start_positions": {
+        "promoter": {
+          "0": 1,
+          "2": 1,
+          "7": 1,
+          "14": 19,
+          "22": 2,
+          "26": 1,
+          "32": 1,
+          "35": 1,
+          "41": 1,
+          "47": 1,
+          "51": 5
+        },
+        "non_promoter": {
+          "0": 1,
+          "9": 1,
+          "10": 1,
+          "11": 1,
+          "14": 1,
+          "15": 1,
+          "18": 1,
+          "20": 1,
+          "22": 1,
+          "26": 1,
+          "28": 1,
+          "30": 1,
+          "40": 1,
+          "41": 1,
+          "42": 2,
+          "47": 1,
+          "48": 2,
+          "50": 1
+        }
+      },
+      "most_common_starts_in_promoters": [
+        {
+          "start": 14,
+          "count": 19
+        },
+        {
+          "start": 51,
+          "count": 5
+        },
+        {
+          "start": 22,
+          "count": 2
+        }
+      ],
+      "position_note": "descriptive only; a position chosen from this data cannot be tested on the same data"
+    }
+  ]
+}
