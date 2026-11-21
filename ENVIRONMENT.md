@@ -9,7 +9,6 @@ checks this on any machine.
 ```bash
 git clone https://github.com/yegerman/genome_codex.git
 cd genome_codex
-git checkout claude/dna-language-research
 ./setup.sh
 ```
 
@@ -49,5 +48,8 @@ Environment name: `genome_code` (personal).
 
 - Hosts for MPRA data outside NCBI, and `download.pytorch.org`, are not on
   the cloud allowlist. Add them when an experiment needs them.
-- The pretrained-model experiment in `experiments/004` has never been run.
-  It needs a GPU or Apple Silicon machine in practice.
+- The pretrained-model experiment in `experiments/004` has run locally only
+  (Apple M5 Pro, about 1.5 minutes on CPU). Its first run downloads about
+  224 MB of model weights from `huggingface.co` into `~/.cache/huggingface`.
+  Its model code needs transformers 4.x, which is why `requirements.txt` pins
+  4.57.6.

@@ -4,4 +4,6 @@ scikit-learn==1.9.1
 joblib==1.6.0
 matplotlib==3.11.2
 torch==2.15.0
-transformers==5.23.0
+# transformers stays on 4.x: the Nucleotide Transformer's own model code
+# (trust_remote_code, used by experiments/004) imports helpers removed in 5.0.
+transformers==4.57.6

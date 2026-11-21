@@ -1,0 +1,34 @@
+extracting frozen embeddings from InstaDeepAI/nucleotide-transformer-v2-50m-multi-species ...
+  13 hidden states, hidden size 512, 13 tokens/sequence
+  candidate representations: 10 (layers [0, 3, 6, 9, 12], mean-pooled and per-token)
+  assignment 1/20: GC_kmer_baseline=87/106  positional_onehot=98/106  pretrained_nt_frozen=88/106
+  assignment 2/20: GC_kmer_baseline=87/106  positional_onehot=97/106  pretrained_nt_frozen=95/106
+  assignment 3/20: GC_kmer_baseline=88/106  positional_onehot=98/106  pretrained_nt_frozen=93/106
+  assignment 4/20: GC_kmer_baseline=88/106  positional_onehot=99/106  pretrained_nt_frozen=93/106
+  assignment 5/20: GC_kmer_baseline=88/106  positional_onehot=95/106  pretrained_nt_frozen=91/106
+  assignment 6/20: GC_kmer_baseline=82/106  positional_onehot=96/106  pretrained_nt_frozen=92/106
+  assignment 7/20: GC_kmer_baseline=89/106  positional_onehot=98/106  pretrained_nt_frozen=91/106
+  assignment 8/20: GC_kmer_baseline=88/106  positional_onehot=95/106  pretrained_nt_frozen=89/106
+  assignment 9/20: GC_kmer_baseline=89/106  positional_onehot=97/106  pretrained_nt_frozen=93/106
+  assignment 10/20: GC_kmer_baseline=86/106  positional_onehot=97/106  pretrained_nt_frozen=91/106
+  assignment 11/20: GC_kmer_baseline=91/106  positional_onehot=98/106  pretrained_nt_frozen=92/106
+  assignment 12/20: GC_kmer_baseline=86/106  positional_onehot=97/106  pretrained_nt_frozen=93/106
+  assignment 13/20: GC_kmer_baseline=84/106  positional_onehot=96/106  pretrained_nt_frozen=92/106
+  assignment 14/20: GC_kmer_baseline=82/106  positional_onehot=97/106  pretrained_nt_frozen=94/106
+  assignment 15/20: GC_kmer_baseline=88/106  positional_onehot=98/106  pretrained_nt_frozen=93/106
+  assignment 16/20: GC_kmer_baseline=86/106  positional_onehot=95/106  pretrained_nt_frozen=89/106
+  assignment 17/20: GC_kmer_baseline=88/106  positional_onehot=100/106  pretrained_nt_frozen=95/106
+  assignment 18/20: GC_kmer_baseline=88/106  positional_onehot=97/106  pretrained_nt_frozen=93/106
+  assignment 19/20: GC_kmer_baseline=86/106  positional_onehot=97/106  pretrained_nt_frozen=96/106
+  assignment 20/20: GC_kmer_baseline=86/106  positional_onehot=97/106  pretrained_nt_frozen=92/106
+
+--- mean over 20 fold assignments ---
+GC_kmer_baseline          81.93% (sd 2.10)  auc 0.865
+positional_onehot         91.60% (sd 1.22)  auc 0.965
+pretrained_nt_frozen      87.03% (sd 1.93)  auc 0.942
+
+--- paired, pretrained minus baseline ---
+vs GC_kmer_baseline        +5.09 pp   wins 20  ties 0  losses 0
+vs positional_onehot       -4.58 pp   wins 0  ties 0  losses 20
+
+wrote nt_benchmark_results.json

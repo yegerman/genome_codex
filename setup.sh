@@ -10,8 +10,13 @@ cd "$(dirname "$0")"
 
 PY="${PYTHON:-}"
 if [ -z "$PY" ]; then
-  for c in python3.13 python3.12 python3.11 python3; do
-    if command -v "$c" >/dev/null 2>&1; then PY="$c"; break; fi
+  # Take the first candidate that is actually 3.11+; a bare python3 can be
+  # an older system interpreter (macOS ships 3.9).
+  for c in python3.14 python3.13 python3.12 python3.11 python3; do
+    if command -v "$c" >/dev/null 2>&1 &&
+       "$c" -c 'import sys; sys.exit(0 if sys.version_info >= (3, 11) else 1)' 2>/dev/null; then
+      PY="$c"; break
+    fi
   done
 fi
 if [ -z "$PY" ]; then

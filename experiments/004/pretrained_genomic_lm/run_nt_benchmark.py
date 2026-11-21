@@ -45,6 +45,9 @@ from sklearn.preprocessing import StandardScaler
 HERE = Path(__file__).parent
 SRC = HERE.parent.parent / "001" / "genetic_ml_pilot" / "promoters_source.csv"
 MODEL_ID = "InstaDeepAI/nucleotide-transformer-v2-50m-multi-species"
+# Exact Hub commit whose modeling_esm.py was read before use. Pinning it means
+# a later upstream change to the remote code is never executed unread.
+MODEL_REVISION = "81b29e5786726d891dbf929404ef20adca5b36f1"
 LENGTH, BASES, KMER = 57, "ACGT", 25
 N_ASSIGNMENTS = 20
 C_GRID = [0.001, 0.01, 0.1, 1.0, 10.0]
@@ -99,8 +102,13 @@ def extract_embeddings(seqs):
     from transformers import AutoModelForMaskedLM, AutoTokenizer
 
     torch.set_num_threads(4)
-    tok = AutoTokenizer.from_pretrained(MODEL_ID, trust_remote_code=True)
-    model = AutoModelForMaskedLM.from_pretrained(MODEL_ID, trust_remote_code=True)
+    tok = AutoTokenizer.from_pretrained(MODEL_ID, revision=MODEL_REVISION,
+                                        trust_remote_code=True)
+    model, loading = AutoModelForMaskedLM.from_pretrained(
+        MODEL_ID, revision=MODEL_REVISION, trust_remote_code=True,
+        use_safetensors=True, output_loading_info=True)
+    # A silently re-initialised layer would make every result meaningless.
+    assert not any(loading.values()), f"incomplete weight load: {loading}"
     model.eval()
 
     enc = tok(list(seqs), return_tensors="pt", padding=True)
@@ -116,6 +124,8 @@ def extract_embeddings(seqs):
         per_token[layer] = (h * mask).reshape(len(seqs), -1).numpy()
     meta = {
         "model_id": MODEL_ID,
+        "model_revision": MODEL_REVISION,
+        "weights": "model.safetensors, all keys loaded",
         "license": "cc-by-nc-sa-4.0 (research use only)",
         "n_hidden_states": n_layers,
         "hidden_size": int(out.hidden_states[-1].shape[-1]),

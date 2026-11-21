@@ -49,21 +49,34 @@ does not.
 threshold from 10 to 35 bp, on both strands, kept accuracy between 88.7% and
 94.3%, with no trend indicating residual overlap drives the result.
 
-## Not verified
+**A pretrained genomic language model has now been run, on this small set
+only.** `experiments/004` used frozen embeddings from Nucleotide Transformer
+v2 50M multi-species (pinned Hub commit, all weights loaded), tuned inside the
+training folds, over 20 group-disjoint fold assignments.
 
-**No pretrained genomic language model has been run.** `experiments/004`
-contains a written benchmark script and nothing else. Its README says so.
-Only a tokenizer was ever downloaded. Any statement about how a genomic
-foundation model performs on this data would be invention.
+| | mean accuracy | sd |
+|---|---|---|
+| positional one-hot | 91.60% | 1.22 |
+| pretrained NT, frozen | 87.03% | 1.93 |
+| 3–4-mer counts | 81.93% | 2.10 |
+
+Paired by assignment, the pretrained model beat k-mers 20 of 20 times and lost
+to the positional model 20 of 20 times. This is one frozen 50M model on 106
+short sequences; it says nothing yet about fine-tuning, larger models or
+quantitative activity.
+
+## Not verified
 
 **No quantitative sequence-to-activity dataset has been obtained.** The MPRA
 accessions named in `HANDOFF.md` have never been downloaded or inspected in
 any session. Whether they contain a usable joined sequence-and-activity table
 is unknown.
 
-**The environment setup script is unproven.** The pinned versions in
-`requirements.txt` are installed and importable in the session that wrote this
-file, but the script has not yet run on a fresh container.
+**The environment setup script has run on one local machine only.** On
+2026-11-21, `./setup.sh` built `.venv` from empty on an Apple M5 Pro (macOS,
+Python 3.14.8) in 75 seconds. torch reported `mps`. `make verify`,
+`make audit` and `make verify-dataset` all passed with every stored result
+unchanged. It has not yet run on a fresh Linux container or the dev container.
 
 ## Constraints that shaped the work
 
